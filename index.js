@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
-
+// we should specify the route after the cors intialization other wise it may cause Cors error
 app.use('/posts', postRoutes);
 const CONNECTION_URL = 'mongodb+srv://talha55:556989talha@cluster0.9et4wou.mongodb.net/?retryWrites=true&w=majority';
 
