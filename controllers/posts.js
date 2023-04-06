@@ -1,5 +1,5 @@
 import PostMessage from "../models/postMessage.js";
-
+import mongoose from "mongoose";
 
 export const getPosts = async (req, res) => {
     try {
@@ -12,12 +12,22 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const post = req.body;
-    const newPost = new PostMessage(post);
-
+    let newPost = new PostMessage(post);
+    newPost.title = post.title;
+    console.log(post,newPost,'post');
     try {
         await newPost.save();
-        res.status('201').json(newPost);
+        const staticResponse = { message: "Post created successfully." };
+        res.status(201).json({ ...staticResponse, post: newPost });
     } catch (error) {
         res.status('409').json({ message: error.message });
     }
+}
+
+export const updatePost = async (req,res)=>{
+    const {id: _id} = req.params;
+    const post = req.body;
+    if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that ID');
+    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, {new:true});
+    res.json(updatedPost);
 }
